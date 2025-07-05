@@ -37,5 +37,5 @@ A beautifully themed Django web application that simulates and monitors a smart 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/smart_irrigation.git
-cd smart_irrigation
+git clone https://github.com/jacksonochieng1540/irrigation.git
+cd irrigation
