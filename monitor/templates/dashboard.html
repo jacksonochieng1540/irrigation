@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Irrigation Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <meta http-equiv="refresh" content="5">
+</head>
+<body>
+    <div class="container">
+        <div style="text-align: right;">
+            <a href="{% url 'logout' %}" style="color: #888; text-decoration: none;">🚪 Logout</a>
+        </div>
+        <h1>🌿 Smart Irrigation Dashboard</h1>
+        <div class="card">
+            <h2>Soil Moisture: {{ soil_moisture }}%</h2>
+        </div>
+        <div class="card">
+            <h2>Water Tank Level: {{ water_level }}%</h2>
+        </div>
+        <div class="card status {{ irrigation_status|lower }}">
+            <h2>Irrigation Status: {{ irrigation_status }}</h2>
+        </div>
+        <form action="{% url 'toggle' %}" method="post">
+            {% csrf_token %}
+            <button class="toggle-btn" type="submit">
+                {% if irrigation_status == "ON" %}💧 Turn OFF{% else %}🔆 Turn ON{% endif %}
+            </button>
+        </form>
+
+        <canvas id="historyChart" width="400" height="200"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('historyChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: {{ timestamps|safe }},
+                datasets: [
+                    {
+                        label: 'Soil Moisture (%)',
+                        data: {{ moistures|safe }},
+                        borderColor: '#34c759',
+                        tension: 0.4,
+                        fill: false
+                    },
+                    {
+                        label: 'Water Level (%)',
+                        data: {{ water_levels|safe }},
+                        borderColor: '#007aff',
+                        tension: 0.4,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true, max: 100 }
+                }
+            }
+        });
+    </script>
+>
+    </div>
+</body>
+</html>
